@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>🌸 دراستي</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --blush:#F9C8D9;--rose:#E87FA4;--deep:#C94F7C;
+  --petal:#FDE8F0;--lavender:#ECD9F5;--soft:#FFF0F5;
+  --text:#3D1A2E;--muted:#9B6B82;--white:#FFFFFF;
+  --gold:#F5C842;--silver:#C0C0C0;--bronze:#CD7F32;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'Cairo',sans-serif;background:var(--soft);
+  color:var(--text);min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;
+  overflow-x:hidden;
+}
+.hidden{display:none!important;}
+
+/* ═══ Petals ═══ */
+.bg-petals{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.petal{position:absolute;opacity:0;border-radius:60% 40% 60% 40%/50% 60% 40% 50%;
+  animation:fall linear infinite;}
+@keyframes fall{
+  0%{transform:translateY(-50px) rotate(0deg);opacity:.75;}
+  100%{transform:translateY(110vh) rotate(400deg);opacity:0;}
+}
+
+/* ═══ Login screen ═══ */
+#screen-login{
+  position:relative;z-index:1;
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;min-height:100vh;padding:24px;
+}
+.login-card{
+  background:var(--white);border:2px solid var(--blush);
+  border-radius:32px;padding:44px 36px;width:100%;max-width:380px;
+  box-shadow:0 12px 48px rgba(201,79,124,.15);
+  display:flex;flex-direction:column;align-items:center;gap:22px;
+}
+.logo{font-size:3.2rem;line-height:1;}
+.login-card h1{
+  font-size:2rem;font-weight:900;
+  background:linear-gradient(135deg,var(--deep),var(--rose));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.login-card p{color:var(--muted);font-size:.92rem;text-align:center;line-height:1.6;}
+.inp-wrap{width:100%;display:flex;flex-direction:column;gap:6px;}
+.inp-wrap label{font-size:.83rem;color:var(--muted);font-weight:700;padding-right:4px;}
+.inp{
+  width:100%;padding:13px 16px;border:2px solid var(--blush);
+  border-radius:14px;font-family:'Cairo',sans-serif;font-size:1rem;
+  background:var(--soft);color:var(--text);outline:none;
+  transition:border-color .2s;
+}
+.inp:focus{border-color:var(--rose);}
+.btn{
+  border:none;cursor:pointer;font-family:'Cairo',sans-serif;
+  font-weight:800;border-radius:999px;
+  transition:transform .15s,box-shadow .15s;
+}
+.btn:active{transform:scale(.95);}
+.btn-main{
+  padding:14px 0;font-size:1.05rem;width:100%;
+  background:linear-gradient(135deg,var(--deep),var(--rose));
+  color:var(--white);box-shadow:0 4px 20px rgba(201,79,124,.38);
+}
+.btn-main:hover{box-shadow:0 8px 28px rgba(201,79,124,.5);transform:translateY(-2px);}
+.btn-sec{
+  padding:10px 22px;font-size:.9rem;
+  background:var(--petal);color:var(--deep);border:2px solid var(--blush);
+}
+.btn-sec:hover{background:var(--blush);}
+.btn-sm{
+  padding:8px 18px;font-size:.82rem;
+  background:var(--petal);color:var(--deep);border:1.5px solid var(--blush);
+}
+
+/* ═══ App screen ═══ */
+#screen-app{
+  position:relative;z-index:1;
+  display:flex;flex-direction:column;align-items:center;
+  gap:20px;padding:20px 16px 52px;width:100%;max-width:480px;
+}
+
+/* Top bar */
+.top-bar{
+  width:100%;display:flex;justify-content:space-between;align-items:center;gap:8px;
+}
+.user-pill{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:7px 16px;border-radius:999px;
+  background:var(--white);border:1.5px solid var(--blush);
+  font-weight:700;font-size:.88rem;color:var(--deep);
+}
+.mode-badge{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:7px 18px;border-radius:999px;
+  font-size:.92rem;font-weight:800;
+  transition:background .5s,color .5s;
+}
+.mode-badge.study{background:var(--deep);color:var(--white);}
+.mode-badge.break{background:var(--lavender);color:var(--deep);}
+
+/* Timer ring */
+.timer-wrap{position:relative;display:flex;align-items:center;justify-content:center;}
+.timer-ring{transform:rotate(-90deg);filter:drop-shadow(0 8px 32px rgba(201,79,124,.28));}
+.ring-bg{fill:none;stroke:var(--blush);stroke-width:11;}
+.ring-prog{
+  fill:none;stroke:var(--deep);stroke-width:11;stroke-linecap:round;
+  transition:stroke-dashoffset 1s linear,stroke .5s;
+}
+.ring-prog.break{stroke:var(--rose);}
+.timer-center{
+  position:absolute;display:flex;flex-direction:column;align-items:center;gap:2px;
+}
+.timer-display{
+  font-size:clamp(2.6rem,9vw,4rem);font-weight:900;
+  color:var(--deep);line-height:1;letter-spacing:-1px;
+}
+.timer-sub{font-size:.72rem;color:var(--muted);font-weight:600;letter-spacing:1.2px;text-transform:uppercase;}
+
+/* Controls */
+.controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center;}
+
+/* Points section */
+.points-card{
+  width:100%;background:var(--white);border:2px solid var(--blush);
+  border-radius:24px;padding:20px 22px;
+  box-shadow:0 4px 20px rgba(232,127,164,.1);
+}
+.points-card h3{font-size:.92rem;color:var(--muted);font-weight:700;margin-bottom:14px;}
+.stars-row{display:flex;gap:10px;justify-content:center;margin-bottom:14px;}
+.star{
+  font-size:2rem;transition:transform .35s cubic-bezier(.34,1.56,.64,1),filter .3s;
+  filter:grayscale(1) opacity(.25);
+}
+.star.earned{filter:none;animation:pop .4s cubic-bezier(.34,1.56,.64,1);}
+@keyframes pop{0%{transform:scale(.4);}65%{transform:scale(1.35);}100%{transform:scale(1);}}
+.bar-wrap{height:10px;background:var(--petal);border-radius:999px;overflow:hidden;}
+.bar-fill{
+  height:100%;border-radius:999px;
+  background:linear-gradient(90deg,var(--rose),var(--deep));
+  transition:width .7s cubic-bezier(.4,0,.2,1);
+}
+.pts-text{text-align:center;margin-top:10px;font-size:.88rem;color:var(--muted);}
+.pts-text b{color:var(--deep);font-size:1rem;}
+
+/* Sessions strip */
+.sessions-strip{
+  display:flex;align-items:center;gap:10px;
+  background:var(--white);border:1.5px solid var(--blush);
+  border-radius:16px;padding:11px 22px;
+  font-size:.9rem;color:var(--muted);
+  box-shadow:0 2px 10px rgba(232,127,164,.08);
+}
+.sessions-strip b{color:var(--deep);font-size:1.35rem;font-weight:900;}
+
+/* History */
+.history-card{
+  width:100%;background:var(--white);border:2px solid var(--blush);
+  border-radius:24px;padding:20px 22px;
+  box-shadow:0 4px 20px rgba(232,127,164,.1);
+}
+.history-card h3{font-size:.92rem;color:var(--muted);font-weight:700;margin-bottom:12px;}
+#historyList{display:flex;flex-direction:column;gap:8px;max-height:180px;overflow-y:auto;}
+.hist-item{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:8px 14px;border-radius:12px;background:var(--soft);
+  font-size:.85rem;
+}
+.hist-item .hi-label{color:var(--text);font-weight:600;}
+.hist-item .hi-time{color:var(--muted);font-size:.78rem;}
+.hist-item .hi-pts{color:var(--deep);font-weight:900;}
+.empty-hist{color:var(--muted);font-size:.85rem;text-align:center;padding:12px 0;}
+
+/* Win overlay */
+.win-overlay{
+  display:none;position:fixed;inset:0;z-index:100;
+  background:rgba(253,232,240,.93);backdrop-filter:blur(10px);
+  align-items:center;justify-content:center;
+  flex-direction:column;text-align:center;padding:24px;
+}
+.win-overlay.show{display:flex;}
+.win-box{
+  background:var(--white);border-radius:32px;padding:44px 40px;
+  box-shadow:0 20px 70px rgba(201,79,124,.28);max-width:340px;width:100%;
+  animation:bounceIn .65s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes bounceIn{0%{transform:scale(.45);opacity:0;}100%{transform:scale(1);opacity:1;}}
+.win-emoji{font-size:4.5rem;margin-bottom:10px;}
+.win-box h2{
+  font-size:2rem;font-weight:900;
+  background:linear-gradient(135deg,var(--deep),var(--rose));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:6px;
+}
+.win-box p{color:var(--muted);font-size:.95rem;margin-bottom:20px;line-height:1.6;}
+.win-name{color:var(--deep);font-weight:900;font-size:1.15rem;}
+.confetti-row{font-size:1.5rem;letter-spacing:4px;margin-bottom:18px;}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:28px;left:50%;
+  transform:translateX(-50%) translateY(90px);
+  background:var(--deep);color:var(--white);
+  padding:11px 28px;border-radius:999px;
+  font-size:.93rem;font-weight:700;
+  opacity:0;transition:transform .38s,opacity .38s;
+  z-index:200;white-space:nowrap;
+  box-shadow:0 4px 18px rgba(201,79,124,.4);
+}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+
+@media(max-width:400px){
+  .controls{flex-direction:column;}
+  .btn-main{font-size:.95rem;}
+  .timer-display{font-size:2.4rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- Petals -->
+<div class="bg-petals" id="petals"></div>
+
+<!-- ════════════════════════════════
+     SCREEN 1 — Login
+════════════════════════════════ -->
+<div id="screen-login">
+  <div class="login-card">
+    <div class="logo">🌸</div>
+    <h1>دراستي</h1>
+    <p>90 دقيقة دراسة · 15 دقيقة راحة<br/>اجمع 5 نقاط وافوز باليوم! ⭐</p>
+    <div class="inp-wrap">
+      <label>اسمك 👤</label>
+      <input class="inp" id="nameInput" placeholder="مثلاً: سارة" maxlength="24"
+             onkeydown="if(event.key==='Enter')startApp()"/>
+    </div>
+    <button class="btn btn-main" onclick="startApp()">ابدأ الدراسة 🚀</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     SCREEN 2 — App
+════════════════════════════════ -->
+<div id="screen-app" class="hidden">
+
+  <!-- Top bar -->
+  <div class="top-bar">
+    <div class="user-pill">
+      <span>👤</span><span id="userNameDisplay"></span>
+    </div>
+    <div class="mode-badge study" id="modeBadge">📚 جلسة دراسة</div>
+  </div>
+
+  <!-- Timer -->
+  <div class="timer-wrap">
+    <svg class="timer-ring" width="230" height="230" viewBox="0 0 240 240">
+      <circle class="ring-bg"   cx="120" cy="120" r="108"/>
+      <circle class="ring-prog" cx="120" cy="120" r="108" id="ringProg"/>
+    </svg>
+    <div class="timer-center">
+      <div class="timer-display" id="timerDisplay">90:00</div>
+      <div class="timer-sub"     id="timerSub">ابدأ الآن 🌸</div>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <button class="btn btn-sec" onclick="resetTimer()">↺ إعادة</button>
+    <button class="btn btn-main" id="startBtn" style="padding:13px 40px;font-size:1rem;"
+            onclick="toggleTimer()">▶ ابدأ</button>
+    <button class="btn btn-sec" onclick="skipPhase()">⏭ تخطي</button>
+  </div>
+
+  <!-- Sessions -->
+  <div class="sessions-strip">
+    <span>جلسات اليوم</span>
+    <b id="sessionsNum">0</b>
+    <span>/ 5 🌿</span>
+  </div>
+
+  <!-- Points -->
+  <div class="points-card">
+    <h3>⭐ نقاطك اليوم</h3>
+    <div class="stars-row" id="starsRow">
+      <span class="star" id="s1">⭐</span>
+      <span class="star" id="s2">⭐</span>
+      <span class="star" id="s3">⭐</span>
+      <span class="star" id="s4">⭐</span>
+      <span class="star" id="s5">⭐</span>
+    </div>
+    <div class="bar-wrap"><div class="bar-fill" id="barFill"></div></div>
+    <p class="pts-text">لديك <b id="ptsNum">0</b> / 5 نقاط</p>
+  </div>
+
+  <!-- History -->
+  <div class="history-card">
+    <h3>📋 سجل الجلسات</h3>
+    <div id="historyList">
+      <div class="empty-hist">لا توجد جلسات بعد — ابدأ الآن! 🌸</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Win overlay -->
+<div class="win-overlay" id="winOverlay">
+  <div class="win-box">
+    <div class="win-emoji">🏆</div>
+    <div class="confetti-row">🌸✨🎉✨🌸</div>
+    <h2>فزت اليوم!</h2>
+    <p class="win-name" id="winName"></p>
+    <p>أكملت 5 جلسات دراسية كاملة.<br/>أنت نجمة حقيقية! ⭐</p>
+    <button class="btn btn-main" onclick="newDay()" style="margin-top:4px;">🔄 يوم جديد</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══ Constants ════════════════════════════════
+const STUDY = 90 * 60;
+const BREAK = 15 * 60;
+const CIRCUM = 2 * Math.PI * 108;   // ≈ 678.58
+
+// ═══ State ════════════════════════════════════
+let userName  = '';
+let isStudy   = true;
+let totalSec  = STUDY;
+let remaining = STUDY;
+let running   = false;
+let ticker    = null;
+let points    = 0;
+let sessions  = 0;
+let history   = [];   // [{label, time, pts}]
+
+// ═══ Petals ═══════════════════════════════════
+const colors = ['#F9C8D9','#E87FA4','#ECD9F5','#FDE8F0'];
+const pBox = document.getElementById('petals');
+for(let i=0;i<20;i++){
+  const p=document.createElement('div');
+  p.className='petal';
+  const sz=12+Math.random()*14;
+  p.style.cssText=`
+    left:${Math.random()*100}vw;
+    width:${sz}px;height:${sz*1.2}px;
+    background:${colors[i%colors.length]};
+    animation-duration:${8+Math.random()*10}s;
+    animation-delay:${Math.random()*14}s;
+  `;
+  pBox.appendChild(p);
+}
+
+// ═══ Load saved data ══════════════════════════
+function loadData(){
+  const today = new Date().toDateString();
+  const saved = JSON.parse(localStorage.getItem('pomodoro_data')||'{}');
+  if(saved.date === today){
+    points   = saved.points   || 0;
+    sessions = saved.sessions || 0;
+    history  = saved.history  || [];
+    userName = saved.name     || '';
+  } else {
+    // New day
+    points=0; sessions=0; history=[];
+    if(saved.name) userName=saved.name;
+  }
+}
+
+function saveData(){
+  localStorage.setItem('pomodoro_data', JSON.stringify({
+    date:     new Date().toDateString(),
+    points, sessions, history, name: userName
+  }));
+}
+
+// ═══ Start app ════════════════════════════════
+function startApp(){
+  const n = document.getElementById('nameInput').value.trim();
+  if(!n){ toast('⚠️ أدخلي اسمك أولاً'); return; }
+  userName = n;
+  saveData();
+  document.getElementById('userNameDisplay').textContent = userName;
+  document.getElementById('screen-login').classList.add('hidden');
+  document.getElementById('screen-app').classList.remove('hidden');
+  initRing();
+  updateAll();
+  if(points>=5) showWin();
+}
+
+// ═══ Ring init ════════════════════════════════
+function initRing(){
+  const r=document.getElementById('ringProg');
+  r.style.strokeDasharray  = CIRCUM;
+  r.style.strokeDashoffset = 0;
+}
+
+// ═══ Timer helpers ════════════════════════════
+function fmt(s){
+  return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+}
+function updateRing(){
+  const offset = CIRCUM*(1-remaining/totalSec);
+  document.getElementById('ringProg').style.strokeDashoffset = offset;
+}
+function updateDisplay(){
+  document.getElementById('timerDisplay').textContent = fmt(remaining);
+  updateRing();
+}
+function setMode(study){
+  isStudy   = study;
+  totalSec  = study ? STUDY : BREAK;
+  remaining = totalSec;
+  const badge = document.getElementById('modeBadge');
+  const ring  = document.getElementById('ringProg');
+  badge.textContent = study ? '📚 جلسة دراسة' : '☕ وقت الراحة';
+  badge.className   = 'mode-badge '+(study?'study':'break');
+  ring.className    = 'ring-prog'+(study?'':' break');
+  document.getElementById('timerSub').textContent = study?'ابدأ الآن 🌸':'استرح 🌿';
+  updateDisplay();
+}
+
+// ═══ Controls ════════════════════════════════
+function toggleTimer(){
+  if(running){
+    clearInterval(ticker); ticker=null; running=false;
+    document.getElementById('startBtn').textContent='▶ استمر';
+    document.getElementById('timerSub').textContent='متوقف مؤقتاً ⏸';
+  } else {
+    running=true;
+    document.getElementById('startBtn').textContent='⏸ توقف';
+    document.getElementById('timerSub').textContent=isStudy?'يتم الدراسة... 📖':'استرح... 🌿';
+    ticker=setInterval(tick,1000);
+  }
+}
+function resetTimer(){
+  clearInterval(ticker);ticker=null;running=false;
+  document.getElementById('startBtn').textContent='▶ ابدأ';
+  setMode(isStudy);
+}
+function skipPhase(){
+  clearInterval(ticker);ticker=null;running=false;
+  document.getElementById('startBtn').textContent='▶ ابدأ';
+  const next=!isStudy;
+  setMode(next);
+  toast(next?'📚 جلسة دراسة':'☕ راحة');
+}
+
+// ═══ Tick ════════════════════════════════════
+function tick(){
+  if(remaining<=0){
+    clearInterval(ticker);ticker=null;running=false;
+    document.getElementById('startBtn').textContent='▶ ابدأ';
+    if(isStudy) onStudyDone();
+    else        onBreakDone();
+    return;
+  }
+  remaining--;
+  updateDisplay();
+}
+
+function onStudyDone(){
+  sessions++;
+  if(points<5) points++;
+  const now=new Date().toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit'});
+  history.unshift({label:'جلسة دراسة #'+sessions, time:now, pts:'+1 ⭐'});
+  saveData();
+  updateAll();
+  toast('🎉 أحسنت! حصلت على نقطة!');
+  if(points>=5){
+    setTimeout(showWin,900);
+  } else {
+    setTimeout(()=>setMode(false),1200);
+  }
+}
+
+function onBreakDone(){
+  const now=new Date().toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit'});
+  history.unshift({label:'راحة', time:now, pts:'💆'});
+  saveData();
+  renderHistory();
+  toast('💪 انتهت الراحة — هيا للدراسة!');
+  setTimeout(()=>setMode(true),1000);
+}
+
+// ═══ Update UI ════════════════════════════════
+function updateAll(){
+  // Points bar
+  document.getElementById('ptsNum').textContent   = points;
+  document.getElementById('barFill').style.width  = (points/5*100)+'%';
+  document.getElementById('sessionsNum').textContent = sessions;
+  // Stars
+  for(let i=1;i<=5;i++){
+    const s=document.getElementById('s'+i);
+    if(i<=points) s.classList.add('earned');
+    else          s.classList.remove('earned');
+  }
+  renderHistory();
+}
+
+function renderHistory(){
+  const el=document.getElementById('historyList');
+  if(!history.length){
+    el.innerHTML='<div class="empty-hist">لا توجد جلسات بعد — ابدأ الآن! 🌸</div>';
+    return;
+  }
+  el.innerHTML=history.slice(0,10).map(h=>`
+    <div class="hist-item">
+      <span class="hi-label">${h.label}</span>
+      <span class="hi-time">${h.time}</span>
+      <span class="hi-pts">${h.pts}</span>
+    </div>
+  `).join('');
+}
+
+// ═══ Win ════════════════════════════════════
+function showWin(){
+  document.getElementById('winName').textContent = '🌟 '+userName+' 🌟';
+  document.getElementById('winOverlay').classList.add('show');
+}
+function newDay(){
+  points=0;sessions=0;history=[];
+  saveData();
+  document.getElementById('winOverlay').classList.remove('show');
+  setMode(true);
+  updateAll();
+  toast('🌸 يوم جديد مبارك!');
+}
+
+// ═══ Toast ════════════════════════════════════
+function toast(msg,dur=2800){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),dur);
+}
+
+// ═══ Init ════════════════════════════════════
+loadData();
+initRing();
+if(userName){
+  document.getElementById('nameInput').value=userName;
+}
+</script>
+</body>
+</html>
